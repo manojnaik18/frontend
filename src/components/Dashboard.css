@@ -1,0 +1,158 @@
+/* Page background spans full width; inner dashboard expands comfortably */
+.dashboard-page {
+  background: #f5f7f8;
+  min-height: 100vh;
+  padding: 2rem 2rem 3rem;
+}
+
+/* Wide content track with large max width to avoid cramping */
+.dashboard-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  color: #333;
+}
+
+/* Header with generous spacing */
+.dashboard-header {
+  text-align: left;
+  margin: 0 0 2rem 0;
+  color: #004d40;
+  font-weight: 800;
+  font-size: 2.2rem;
+  letter-spacing: 0.2px;
+}
+
+/* Spacious responsive grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2rem;
+}
+
+/* Card base */
+.dashboard-card {
+  background-color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+}
+
+.dashboard-card.interactive {
+  cursor: pointer;
+}
+
+/* Title styling */
+.card-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: #0f766e;
+  border-bottom: 2px solid #eef2f3;
+  padding-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+/* Stat card (small) */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+  background: linear-gradient(180deg, #e0f2f1, #f4fbfa);
+  padding: 1.25rem;
+  border-radius: 12px;
+}
+.stat-value {
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: #004d40;
+  line-height: 1;
+  margin: 0;
+}
+.stat-label {
+  font-size: 0.95rem;
+  color: #546e7a;
+  font-weight: 600;
+}
+
+/* Attention list */
+.attention-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.attention-list li {
+  background-color: #fff7ea;
+  color: #9a4e00;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+  border-left: 6px solid #ffb300;
+}
+
+/* Loading */
+.loading-text {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #546e7a;
+  padding: 4rem 0;
+  font-style: italic;
+}
+
+/* Chart wrapper: each chart gets ample height and padding */
+.chart-wrap {
+  position: relative;
+  min-height: 360px;
+  height: 420px;
+  padding: 0.5rem;
+}
+@media (max-width: 1200px) {
+  .chart-wrap {
+    height: 380px;
+    min-height: 340px;
+  }
+}
+@media (max-width: 768px) {
+  .chart-wrap {
+    height: 320px;
+    min-height: 300px;
+  }
+}
+
+/* Layout spans:
+   - Small metric cards span 3 cols on desktop, 6 on tablet, 12 on mobile
+   - Big charts span 6 or 12 for breathing room
+*/
+.col-span-3 { grid-column: span 3; }
+.col-span-4 { grid-column: span 4; }
+.col-span-6 { grid-column: span 6; }
+.col-span-8 { grid-column: span 8; }
+.col-span-12 { grid-column: span 12; }
+
+@media (max-width: 1200px) {
+  .col-span-3 { grid-column: span 6; }
+  .col-span-4 { grid-column: span 6; }
+  .col-span-6 { grid-column: span 12; }
+  .col-span-8 { grid-column: span 12; }
+}
+@media (max-width: 768px) {
+  .col-span-3,
+  .col-span-4,
+  .col-span-6,
+  .col-span-8 {
+    grid-column: span 12;
+  }
+}
+
+/* Ensure canvas fills the wrapper when maintainAspectRatio: false */
+.chart-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
