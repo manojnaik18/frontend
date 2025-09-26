@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:5000/api'
+    baseURL: 'https://backend-2-mbg1.onrender.com/api'
 });
 
 export const addResult = (data) => API.post('/results', data);
