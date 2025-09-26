@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'https://backend-production-19e1.up.railway.app/'
+    baseURL: 'https://backend-3-87hx.onrender.com/'
 });
 
 export const addResult = (data) => API.post('/results', data);
