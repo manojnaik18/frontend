@@ -7,13 +7,13 @@ function App() {
   return (
     <>
       {/* Example routing toggle; pick one as needed */}
+      <Dashboard />
       <div className="page-shell">
         <div className="page-header"><h1>Add Result</h1></div>
         <div className="content-container form-container">
           <DataEntryForm />
         </div>
       </div> 
-      <Dashboard />
        
     </>
   );

@@ -32,10 +32,26 @@ ChartJS.register(
 export default function Dashboard() {
   const [data, setData] = useState(null);
   const [students, setStudents] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [modalTitle, setModalTitle] = useState('');
-  const [subjects, setSubjects] = useState([]);
 
+  // Typing effect state
+  const fullMessage = "Welcome back, Mrs. Anjali Kapoor! 🌟";
+  const [typedMessage, setTypedMessage] = useState("");
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      setTypedMessage((prev) => prev + fullMessage[index]);
+      index++;
+      if (index === fullMessage.length) clearInterval(interval);
+    }, 100); // typing speed (ms per letter)
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch students
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -48,18 +64,20 @@ export default function Dashboard() {
     fetchStudents();
   }, []);
 
+  // Fetch subjects
   useEffect(() => {
     const fetchSubjects = async () => {
       try {
-        const res = await getStudents();
+        const res = await getSubjects();
         setSubjects(res.data);
       } catch (error) {
-        console.error('Failed to fetch students:', error);
+        console.error('Failed to fetch subjects:', error);
       }
     };
     fetchSubjects();
   }, []);
 
+  // Fetch dashboard summary
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -73,34 +91,44 @@ export default function Dashboard() {
   }, []);
 
   const handleCardClick = async (type) => {
+    setIsModalOpen(true);
+    setModalContent(null);
+
     try {
-      let response;
+      let dataForModal;
+
       switch (type) {
         case 'students':
           setModalTitle('All Students');
-          response = await getStudents();
-          setStudents(response.data);
-          console.log("line 56 dashboard students", response);
-          
+          dataForModal = (await getStudents()).data;
           break;
         case 'subjects':
           setModalTitle('All Subjects');
-          response = await getSubjects();
+          dataForModal = (await getSubjects()).data;
           break;
         case 'results':
           setModalTitle('All Results');
-          response = await getAllResults();
+          dataForModal = (await getAllResults()).data;
           break;
         default:
           return;
       }
-      setModalContent(response.data);
+
+      setModalContent(Array.isArray(dataForModal) ? dataForModal : []);
     } catch (error) {
       console.error(`Failed to fetch ${type}:`, error);
+      setModalContent([]);
     }
   };
 
-  if (!data) return <div className="dashboard-page"><div className="dashboard-container"><div className="loading-text">Loading Dashboard...</div></div></div>;
+  if (!data)
+    return (
+      <div className="dashboard-page">
+        <div className="dashboard-container">
+          <div className="loading-text">Loading Dashboard...</div>
+        </div>
+      </div>
+    );
 
   // Chart data
   const subjectAvgData = {
@@ -150,7 +178,6 @@ export default function Dashboard() {
     ],
   };
 
-  // Chart options
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -177,10 +204,16 @@ export default function Dashboard() {
   return (
     <div className="dashboard-page">
       <div className="dashboard-container">
+
+        {/* Typing Welcome Message */}
+        <div className="welcome-message">
+  <span class>Welcome back,</span> <span className="teacher-name">Mrs. Anjali Kapoor</span> ! Hope you have a fantastic day 🌟
+</div>
+
         <h1 className="dashboard-header">Performance Dashboard</h1>
 
         <div className="dashboard-grid">
-          {/* KPI cards */}
+          {/* KPI Cards */}
           <div className="dashboard-card col-span-3 interactive" onClick={() => handleCardClick('students')}>
             <div className="stat-card">
               <p className="stat-value">{students.length}</p>
@@ -204,12 +237,12 @@ export default function Dashboard() {
 
           <div className="dashboard-card col-span-3">
             <div className="stat-card">
-              <p className="stat-value">{Math.round(data.classAverage)}</p>
+              <p className="stat-value">{Math.round(data.overallClassAverage)}</p>
               <p className="stat-label">Class Avg</p>
             </div>
           </div>
 
-          {/* Subject averages (wide bar) */}
+          {/* Subject Averages */}
           <div className="dashboard-card col-span-8">
             <h3 className="card-title">Average by Subject</h3>
             <div className="chart-wrap">
@@ -217,7 +250,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Top students (narrow horizontal bar) */}
+          {/* Top Students */}
           <div className="dashboard-card col-span-4">
             <h3 className="card-title">Top Students</h3>
             <div className="chart-wrap">
@@ -225,22 +258,20 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Score distribution (doughnut, full width on smaller) */}
+          {/* Score Distribution */}
           <div className="dashboard-card col-span-6">
             <h3 className="card-title">Score Distribution</h3>
             <div className="chart-wrap">
-              <Doughnut data={scoreDistributionData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }} />
+              <Doughnut data={scoreDistributionData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }}} />
             </div>
           </div>
 
-          {/* Attention list */}
+          {/* Needs Attention */}
           <div className="dashboard-card col-span-6">
             <h3 className="card-title">Needs Attention</h3>
-            {data.studentsNeedingAttention && data.studentsNeedingAttention.length > 0 ? (
+            {data.needingAttention && data.needingAttention.length > 0 ? (
               <ul className="attention-list">
-                {data.studentsNeedingAttention.map((s) => (
-                  <li key={s.name}>{s.name} — Avg {Math.round(s.avg)}</li>
-                ))}
+                {data.needingAttention.map((s, i) => <li key={i}>{s}</li>)}
               </ul>
             ) : (
               <div className="loading-text">No students currently need attention. Great job! 🥳</div>
@@ -248,27 +279,15 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <Modal
-        title={modalTitle}
-        items={modalContent}
-        onClose={() => setModalContent(null)}
-        renderItem={(item) => {
-          switch (modalTitle) {
-            case 'All Students':
-              return <li key={item._id}>{item.name} ({item.className})</li>;
-            case 'All Subjects':
-              return <li key={item._id}>{item.name}</li>;
-            case 'All Results':
-              return (
-                <li key={item._id}>
-                  {item.student?.name} - {item.subject?.name}: <strong>{item.score}</strong>
-                </li>
-              );
-            default:
-              return null;
-          }
-        }}
-      />
+
+      {/* Modal */}
+      {isModalOpen && (
+        <Modal
+          title={modalTitle}
+          items={modalContent}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
