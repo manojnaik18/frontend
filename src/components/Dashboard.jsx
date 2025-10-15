@@ -29,27 +29,13 @@ ChartJS.register(
   ArcElement
 );
 
-export default function Dashboard() {
+export default function Dashboard({ userName }) {
   const [data, setData] = useState(null);
   const [students, setStudents] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
   const [modalTitle, setModalTitle] = useState('');
-
-  // Typing effect state
-  const fullMessage = "Welcome back, Mrs. Anjali Kapoor! 🌟";
-  const [typedMessage, setTypedMessage] = useState("");
-
-  useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      setTypedMessage((prev) => prev + fullMessage[index]);
-      index++;
-      if (index === fullMessage.length) clearInterval(interval);
-    }, 100); // typing speed (ms per letter)
-    return () => clearInterval(interval);
-  }, []);
 
   // Fetch students
   useEffect(() => {
@@ -207,7 +193,7 @@ export default function Dashboard() {
 
         {/* Typing Welcome Message */}
         <div className="welcome-message">
-  <span class>Welcome back,</span> <span className="teacher-name">Mrs. Anjali Kapoor</span> ! Hope you have a fantastic day 🌟
+  <span>Welcome back,</span> <span className="teacher-name">{userName}</span>! Hope you have a fantastic day 🌟
 </div>
 
         <h1 className="dashboard-header">Performance Dashboard</h1>
