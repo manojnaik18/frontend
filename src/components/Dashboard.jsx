@@ -29,7 +29,7 @@ ChartJS.register(
   ArcElement
 );
 
-export default function Dashboard({ userName }) {
+export default function Dashboard({ userName, refreshKey }) {
   const [data, setData] = useState(null);
   const [students, setStudents] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -48,7 +48,7 @@ export default function Dashboard({ userName }) {
       }
     };
     fetchStudents();
-  }, []);
+  }, [refreshKey]);
 
   // Fetch subjects
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function Dashboard({ userName }) {
       }
     };
     fetchSubjects();
-  }, []);
+  }, [refreshKey]);
 
   // Fetch dashboard summary
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function Dashboard({ userName }) {
       }
     };
     fetchData();
-  }, []);
+  }, [refreshKey]);
 
   const handleCardClick = async (type) => {
     setIsModalOpen(true);

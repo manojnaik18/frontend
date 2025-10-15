@@ -41,20 +41,28 @@ function App() {
   );
 }
 
-const MainLayout = ({ userName, onLogout }) => (
-  <div className="App">
-    <header className="App-header">
-      <h1>School Performance Tracker</h1>
-      <div className="header-right">
-        <span>Welcome, {userName}!</span>
-        <button onClick={onLogout} className="logout-btn">Logout</button>
-      </div>
-    </header>
-    <main>
-      <DataEntryForm />
-      <Dashboard userName={userName} />
-    </main>
-  </div>
-);
+const MainLayout = ({ userName, onLogout }) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleResultAdded = () => {
+    setRefreshKey(oldKey => oldKey + 1);
+  };
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>School Performance Tracker</h1>
+        <div className="header-right">
+          <span>Welcome, {userName}!</span>
+          <button onClick={onLogout} className="logout-btn">Logout</button>
+        </div>
+      </header>
+      <main>
+        <DataEntryForm onAddResultSuccess={handleResultAdded} />
+        <Dashboard userName={userName} refreshKey={refreshKey} />
+      </main>
+    </div>
+  );
+};
 
 export default App;

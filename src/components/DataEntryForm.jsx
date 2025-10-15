@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { addResult, getSubjects } from '../api/api';
 import './DataEntryForm.css';
 
-export default function DataEntryForm() {
+export default function DataEntryForm({ onAddResultSuccess }) {
     const [studentName, setStudentName] = useState('');
     const [subject, setSubject] = useState('');
     const [className, setClassName] = useState('8th A'); // Default class
@@ -44,6 +44,7 @@ export default function DataEntryForm() {
             if (subjectsList.length > 0) {
                 setSubject(subjectsList[0].name);
             }
+            onAddResultSuccess(); // Trigger the refresh in the Dashboard
             setShowForm(false); // <-- hide form after submit
         } catch (err) {
             console.error("Error submitting result:", err);
