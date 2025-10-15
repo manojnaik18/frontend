@@ -7,14 +7,14 @@ import { setAuthToken } from './api/api';
 import './App.css';
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [userName, setUserName] = useState(localStorage.getItem('userName'));
+  // Read the token from localStorage and immediately set it for all API requests.
+  const initialToken = localStorage.getItem('token');
+  if (initialToken) {
+    setAuthToken(initialToken);
+  }
 
-  useEffect(() => {
-    if (token) {
-      setAuthToken(token);
-    }
-  }, [token]);
+  const [token, setToken] = useState(initialToken);
+  const [userName, setUserName] = useState(localStorage.getItem('userName'));
 
   const handleLoginSuccess = (newToken, newUserName) => {
     localStorage.setItem('token', newToken);
