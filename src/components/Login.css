@@ -50,6 +50,10 @@
     margin-bottom: 20px;
 }
 
+.password-group {
+    position: relative;
+}
+
 .input-group label {
     display: block;
     margin-bottom: 8px;
@@ -70,6 +74,23 @@
     outline: none;
     border-color: #00796b;
     box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+}
+
+.password-toggle-btn {
+    position: absolute;
+    top: 42px; /* Adjust to vertically align with the input */
+    right: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0;
+}
+
+.password-toggle-btn:hover {
+    color: #00796b;
 }
 
 .login-btn {
