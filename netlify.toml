@@ -1,0 +1,6 @@
+# This rule tells Netlify to redirect all paths to index.html,
+# so your client-side router can handle them.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
